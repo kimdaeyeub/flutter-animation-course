@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class AppleWatchScreen extends StatefulWidget {
@@ -32,17 +34,78 @@ class _AppleWatchScreenState extends State<AppleWatchScreen> {
 class AppleWatchPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final rect = Rect.fromLTWH(0, 0, size.width, size.height);
-    final paint = Paint()..color = Colors.blue;
-    final circlePaint = Paint()
-      ..color = Colors.red
-      ..strokeWidth = 20
-      ..style = PaintingStyle.stroke;
-    canvas.drawRect(rect, paint);
+    final center = Offset(size.width / 2, size.height / 2);
+
+    final redCircleRadius = (size.width / 2) * 0.9;
+    const startingAngle = -0.5 * pi;
+    //draw red
+    final redCirclePaint = Paint()
+      ..color = Colors.red.shade500.withOpacity(0.3)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 25;
     canvas.drawCircle(
-      Offset(size.width / 2, size.width / 2),
-      size.width / 2,
-      circlePaint,
+      center,
+      redCircleRadius,
+      redCirclePaint,
+    );
+
+    final greenCircleRadius = (size.width / 2) * 0.76;
+    //draw green
+    final greenCirclePaint = Paint()
+      ..color = Colors.green.shade500.withOpacity(0.3)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 25;
+    canvas.drawCircle(
+      center,
+      greenCircleRadius,
+      greenCirclePaint,
+    );
+
+    //draw blue
+    final blueCirclePaint = Paint()
+      ..color = Colors.cyan.shade500.withOpacity(0.3)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 25;
+    canvas.drawCircle(
+      center,
+      (size.width / 2) * 0.62,
+      blueCirclePaint,
+    );
+
+    //red arc
+    final redArcRect = Rect.fromCircle(
+      center: center,
+      radius: redCircleRadius,
+    );
+    final redArcPaint = Paint()
+      ..color = Colors.red.shade500
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round
+      ..strokeWidth = 25;
+    canvas.drawArc(
+      redArcRect,
+      startingAngle,
+      1.5 * pi,
+      false,
+      redArcPaint,
+    );
+
+    //green arc
+    final greenArcRect = Rect.fromCircle(
+      center: center,
+      radius: greenCircleRadius,
+    );
+    final greenArcPaint = Paint()
+      ..color = Colors.green.shade500
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round
+      ..strokeWidth = 25;
+    canvas.drawArc(
+      greenArcRect,
+      startingAngle,
+      1.0 * pi,
+      false,
+      greenArcPaint,
     );
   }
 
