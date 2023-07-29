@@ -18,7 +18,9 @@ class _ExplicitAnimationsScreenState extends State<ExplicitAnimationsScreen>
     reverseDuration: const Duration(
       seconds: 1,
     ),
-  );
+  )..addListener(() {
+      _value.value = _animationController.value;
+    });
 
   late final Animation<Decoration> _decoration = DecorationTween(
     begin: BoxDecoration(
@@ -67,6 +69,13 @@ class _ExplicitAnimationsScreenState extends State<ExplicitAnimationsScreen>
   void dispose() {
     _animationController.dispose();
     super.dispose();
+  }
+
+  final ValueNotifier<double> _value = ValueNotifier(0.0);
+
+  void _onChanged(double value) {
+    _value.value = 0;
+    _animationController.value = value;
   }
 
   @override
@@ -122,7 +131,16 @@ class _ExplicitAnimationsScreenState extends State<ExplicitAnimationsScreen>
                   ),
                 ),
               ],
-            )
+            ),
+            const SizedBox(
+              height: 25,
+            ),
+            ValueListenableBuilder(
+              valueListenable: _value,
+              builder: (context, value, child) {
+                return Slider(value: value, onChanged: _onChanged);
+              },
+            ),
           ],
         ),
       ),
