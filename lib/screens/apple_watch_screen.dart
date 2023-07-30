@@ -155,7 +155,7 @@ class AppleWatchPainter extends CustomPainter {
     canvas.drawArc(
       greenArcRect,
       startingAngle,
-      progress * pi,
+      progress * pi * 0.6,
       false,
       greenArcPaint,
     );
@@ -173,7 +173,7 @@ class AppleWatchPainter extends CustomPainter {
     canvas.drawArc(
       blueArcRect,
       startingAngle,
-      progress * pi,
+      progress * pi * 0.8,
       false,
       blueArcPaint,
     );
