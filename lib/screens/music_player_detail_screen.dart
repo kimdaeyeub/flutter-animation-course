@@ -31,10 +31,26 @@ class _MusicPlayerDetailScreenState extends State<MusicPlayerDetailScreen>
     end: const Offset(-0.6, 0),
   ).animate(_marqueeController);
 
+  late final AnimationController _playPauseController = AnimationController(
+    vsync: this,
+    duration: const Duration(
+      milliseconds: 500,
+    ),
+  );
+
+  void _onPlayPauseTap() {
+    if (_playPauseController.isCompleted) {
+      _playPauseController.reverse();
+    } else {
+      _playPauseController.forward();
+    }
+  }
+
   @override
   void dispose() {
     _progressController.dispose();
     _marqueeController.dispose();
+    _playPauseController.dispose();
     super.dispose();
   }
 
@@ -143,6 +159,31 @@ class _MusicPlayerDetailScreenState extends State<MusicPlayerDetailScreen>
               style: TextStyle(
                 fontSize: 18,
               ),
+            ),
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          GestureDetector(
+            onTap: _onPlayPauseTap,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AnimatedIcon(
+                  icon: AnimatedIcons.pause_play,
+                  progress: _playPauseController,
+                  size: 60,
+                ),
+                // LottieBuilder.asset(
+                //   "assets/animations/play-lottie.json",
+                //   controller: _playPauseController,
+                //   width: 200,
+                //   height: 200,
+                //   onLoaded: (composition) {
+                //     _playPauseController.duration = composition.duration;
+                //   },
+                // ),
+              ],
             ),
           ),
         ],
