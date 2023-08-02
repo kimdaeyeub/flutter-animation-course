@@ -51,6 +51,9 @@ class _MusicPlayerDetailScreenState extends State<MusicPlayerDetailScreen>
     duration: const Duration(
       seconds: 2,
     ),
+    reverseDuration: const Duration(
+      seconds: 1,
+    ),
   );
 
   final Curve _menuCurve = Curves.easeInOutCubic;
@@ -95,15 +98,32 @@ class _MusicPlayerDetailScreenState extends State<MusicPlayerDetailScreen>
     ),
   );
 
-  late final Animation<Offset> _profileSlide = Tween<Offset>(
+  late final List<Animation<Offset>> _menuAnimations = [
+    for (var i = 0; i < _menus.length; i++)
+      Tween<Offset>(
+        begin: const Offset(-1, 0),
+        end: Offset.zero,
+      ).animate(
+        CurvedAnimation(
+          parent: _menuController,
+          curve: Interval(
+            0.4 + (0.1 * i),
+            0.7 + (0.1 * i),
+            curve: _menuCurve,
+          ),
+        ),
+      ),
+  ];
+
+  late final Animation<Offset> _logoutSlide = Tween<Offset>(
     begin: const Offset(-1, 0),
     end: Offset.zero,
   ).animate(
     CurvedAnimation(
       parent: _menuController,
       curve: Interval(
-        0.4,
-        0.7,
+        0.8,
+        1.0,
         curve: _menuCurve,
       ),
     ),
@@ -114,6 +134,7 @@ class _MusicPlayerDetailScreenState extends State<MusicPlayerDetailScreen>
     _progressController.dispose();
     _marqueeController.dispose();
     _playPauseController.dispose();
+    _menuController.dispose();
     super.dispose();
   }
 
@@ -186,20 +207,20 @@ class _MusicPlayerDetailScreenState extends State<MusicPlayerDetailScreen>
                 const SizedBox(
                   height: 30,
                 ),
-                for (var menu in _menus) ...[
+                for (var i = 0; i < _menus.length; i++) ...[
                   SlideTransition(
-                    position: _profileSlide,
+                    position: _menuAnimations[i],
                     child: Row(
                       children: [
                         Icon(
-                          menu["icon"],
+                          _menus[i]["icon"],
                           color: Colors.grey.shade200,
                         ),
                         const SizedBox(
                           width: 10,
                         ),
                         Text(
-                          menu["text"],
+                          _menus[i]["text"],
                           style: TextStyle(
                             fontSize: 18,
                             color: Colors.grey.shade200,
@@ -213,23 +234,26 @@ class _MusicPlayerDetailScreenState extends State<MusicPlayerDetailScreen>
                   ),
                 ],
                 const Spacer(),
-                const Row(
-                  children: [
-                    Icon(
-                      Icons.logout,
-                      color: Colors.red,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      "Logout",
-                      style: TextStyle(
-                        fontSize: 18,
+                SlideTransition(
+                  position: _logoutSlide,
+                  child: const Row(
+                    children: [
+                      Icon(
+                        Icons.logout,
                         color: Colors.red,
                       ),
-                    )
-                  ],
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        "Logout",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.red,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
                 const SizedBox(
                   height: 100,
